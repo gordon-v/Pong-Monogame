@@ -37,6 +37,13 @@
 /processorParam:TextureFormat=Color
 /build:bar.png
 
+#begin Fonts/BitFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/BitFont.spritefont
+
 #begin kiwi.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -48,4 +55,22 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:kiwi.png
+
+#begin Sounds/bounce.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/bounce.wav
+
+#begin Sounds/bounce2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/bounce2.wav
+
+#begin Sounds/start.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/start.wav
 

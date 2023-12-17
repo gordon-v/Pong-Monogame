@@ -10,6 +10,8 @@ namespace Pong
 {
     internal class Ball
     {
+        
+        private Game1 _game = null;
         private Texture2D Texture;
         private Vector2 Position;
         private float Speed, Xspeed, Yspeed;
@@ -22,6 +24,11 @@ namespace Pong
             Yspeed = 1;
             angle = 0.7;
 
+        }
+        public Game1 Game
+        {
+            get { return this._game;  }
+            set { this._game = value; }
         }
         public void setTexture(Texture2D texture)
         {
@@ -45,28 +52,43 @@ namespace Pong
         {
             Yspeed *= -1;
         }
-        public void checkBounds(GraphicsDeviceManager _graphics)
+        public void checkBounds(GraphicsDeviceManager _graphics, GameSet gS)
         {
             if (Position.X > _graphics.PreferredBackBufferWidth - Texture.Width / 2)
             {
-                Position.X = _graphics.PreferredBackBufferWidth - Texture.Width / 2;
-                reverseX();
+                //USED FOR BOUNCEBACK
+                //Position.X = _graphics.PreferredBackBufferWidth - Texture.Width / 2;
+                //reverseX();
+
+                //ADD POINT AND RESET
+                gS.PointsL++;
+                gS.reset(_graphics);
+                this.Game.playBounceSound();
+
             }
             else if (Position.X < Texture.Width / 2)
             {
-                Position.X = Texture.Width / 2;
-                reverseX();
+                //USED FOR BOUNCEBACK
+                //Position.X = Texture.Width / 2;
+                //reverseX();
+                this.Game.playBounceSound();
+                //ADD POINT AND RESET
+                gS.PointsR++;
+                gS.reset(_graphics);
             }
 
             if (Position.Y > _graphics.PreferredBackBufferHeight - Texture.Height / 2)
             {
                 Position.Y = _graphics.PreferredBackBufferHeight - Texture.Height / 2;
                 reverseY();
+                this.Game.playBounceSound();
+
             }
             else if (Position.Y < Texture.Height / 2)
             {
                 Position.Y = Texture.Height / 2;
                 reverseY();
+                this.Game.playBounceSound();
             }
 
             
@@ -84,12 +106,13 @@ namespace Pong
             if(B1.X < A2.X && B1.Y < A2.Y && B2.X > A1.X && B2.Y > A1.Y) {
                 //is colliding
                 this.reverseX();
+                this.Game.playBounceSound();
 
             }
-
-
-
-
+        }
+        public void resetPosition(GraphicsDeviceManager _graphics)
+        {
+            Position = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
         }
     }
 }
