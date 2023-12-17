@@ -25,7 +25,7 @@ namespace Pong
 
         public void reset(GraphicsDeviceManager _graphics)
         {
-            ball.resetPosition(_graphics);
+            ball.resetPosition();
             this.gameRunning = false;
         }
 

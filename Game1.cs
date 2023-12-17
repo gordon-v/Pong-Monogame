@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -7,8 +8,7 @@ namespace Pong
 {
     public class Game1 : Game
     {
-        public Game1 game1Instance;
-
+        public Random r;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
@@ -18,6 +18,7 @@ namespace Pong
         public SoundEffect bounceSound;
         private SoundEffect startSound;
 
+        AI aiRight, aiLeft;
         //textures
         GameSet gameSet;
 
@@ -36,10 +37,9 @@ namespace Pong
 
         protected override void Initialize()
         {
-            
+
             //_graphics.ToggleFullScreen();
             // TODO: Add your initialization logic here
-            
 
             ball = new Ball(new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2), 500f);
             ball.Game = this;
@@ -48,11 +48,15 @@ namespace Pong
             score = "0 : 0";
 
             Left = new Bar(200f);
+            Left.Game = this;
             Right = new Bar(200f);
+            Right.Game = this;
 
             Left.setPosition(new Vector2(60, _graphics.PreferredBackBufferHeight / 2));
             Right.setPosition(new Vector2(_graphics.PreferredBackBufferWidth - 60, _graphics.PreferredBackBufferHeight / 2));
 
+            aiRight = new AI(Right, ball);
+            aiLeft = new AI(Left, ball);
             base.Initialize();
         }
 
@@ -75,7 +79,7 @@ namespace Pong
         {
             score = gameSet.toString();
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+            if (Keyboard.GetState().IsKeyDown(Keys.Space) && gameSet.gameRunning==false)
             {
                 gameSet.gameRunning = true;
                 startSound.Play();
@@ -84,7 +88,7 @@ namespace Pong
             if (gameSet.gameRunning)
             {
                 ball.move((float)gameTime.ElapsedGameTime.TotalSeconds);
-                ball.checkBounds(_graphics, gameSet);
+                ball.checkBounds(gameSet);
                 ball.collisionCheck(Left.getPosition(), Left.getTexture());
                 ball.collisionCheck(Right.getPosition(), Right.getTexture());
 
@@ -94,24 +98,25 @@ namespace Pong
                 //move bar & check if out of bounds
                 if (Keyboard.GetState().IsKeyDown(Keys.W))
                 {
-                    Left.moveUp((float)gameTime.ElapsedGameTime.TotalSeconds, _graphics);
+                    Left.moveUp((float)gameTime.ElapsedGameTime.TotalSeconds);
 
                 }
                 if (Keyboard.GetState().IsKeyDown(Keys.S))
                 {
-                    Left.moveDown((float)gameTime.ElapsedGameTime.TotalSeconds, _graphics);
+                    Left.moveDown((float)gameTime.ElapsedGameTime.TotalSeconds,_graphics);
                 }
 
                 if (Keyboard.GetState().IsKeyDown(Keys.Up))
                 {
-                    Right.moveUp((float)gameTime.ElapsedGameTime.TotalSeconds, _graphics);
+                    Right.moveUp((float)gameTime.ElapsedGameTime.TotalSeconds);
                 }
                 if (Keyboard.GetState().IsKeyDown(Keys.Down))
                 {
-                    Right.moveDown((float)gameTime.ElapsedGameTime.TotalSeconds, _graphics);
+                    Right.moveDown((float)gameTime.ElapsedGameTime.TotalSeconds,_graphics);
                 }
-                
 
+                aiRight.play((float)gameTime.ElapsedGameTime.TotalSeconds, _graphics);
+                //aiLeft.play((float)gameTime.ElapsedGameTime.TotalSeconds, _graphics);
                 // TODO: Add your update logic here
             }
                 base.Update(gameTime);
@@ -120,6 +125,10 @@ namespace Pong
         public void playBounceSound()
         {
             bounceSound.Play();
+        }
+        public GraphicsDeviceManager getGraphics()
+        {
+            return _graphics;
         }
 
         protected override void Draw(GameTime gameTime)

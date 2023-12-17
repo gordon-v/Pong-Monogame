@@ -10,7 +10,7 @@ namespace Pong
 {
     internal class Ball
     {
-        
+        Random r;
         private Game1 _game = null;
         private Texture2D Texture;
         private Vector2 Position;
@@ -18,11 +18,12 @@ namespace Pong
         private double angle;
         public Ball(Vector2 position, float speed)
         {
+            r = new Random();
             Position = position;
             Speed = speed;
             Xspeed = 1;
             Yspeed = 1;
-            angle = 0.7;
+            angle = 0.75;
 
         }
         public Game1 Game
@@ -46,15 +47,16 @@ namespace Pong
         }
         public void reverseX()
         {
+            angle = (double)r.Next(40,100)/100;
             Xspeed *= -1;
         }
         public void reverseY()
         {
             Yspeed *= -1;
         }
-        public void checkBounds(GraphicsDeviceManager _graphics, GameSet gS)
+        public void checkBounds(GameSet gS)
         {
-            if (Position.X > _graphics.PreferredBackBufferWidth - Texture.Width / 2)
+            if (Position.X > this.Game.getGraphics().PreferredBackBufferWidth - Texture.Width / 2)
             {
                 //USED FOR BOUNCEBACK
                 //Position.X = _graphics.PreferredBackBufferWidth - Texture.Width / 2;
@@ -62,7 +64,7 @@ namespace Pong
 
                 //ADD POINT AND RESET
                 gS.PointsL++;
-                gS.reset(_graphics);
+                gS.reset(this.Game.getGraphics());
                 this.Game.playBounceSound();
 
             }
@@ -74,12 +76,12 @@ namespace Pong
                 this.Game.playBounceSound();
                 //ADD POINT AND RESET
                 gS.PointsR++;
-                gS.reset(_graphics);
+                gS.reset(this.Game.getGraphics());
             }
 
-            if (Position.Y > _graphics.PreferredBackBufferHeight - Texture.Height / 2)
+            if (Position.Y > this.Game.getGraphics().PreferredBackBufferHeight - Texture.Height / 2)
             {
-                Position.Y = _graphics.PreferredBackBufferHeight - Texture.Height / 2;
+                Position.Y = this.Game.getGraphics().PreferredBackBufferHeight - Texture.Height / 2;
                 reverseY();
                 this.Game.playBounceSound();
 
@@ -110,9 +112,14 @@ namespace Pong
 
             }
         }
-        public void resetPosition(GraphicsDeviceManager _graphics)
+        public void resetPosition()
         {
-            Position = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
+            Position = new Vector2(this.Game.getGraphics().PreferredBackBufferWidth / 2, this.Game.getGraphics().PreferredBackBufferHeight / 2);
+            angle = (double)r.Next(40, 100) / 100;
+        }
+        public Vector2 getPosition()
+        {
+            return this.Position;
         }
     }
 }

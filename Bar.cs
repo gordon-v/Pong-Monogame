@@ -10,6 +10,8 @@ namespace Pong
 {
     internal class Bar
     {
+        private Game1 _game = null;
+
         public Texture2D barTexture;
         public Vector2 Position;
         private float Speed;
@@ -19,6 +21,12 @@ namespace Pong
             Speed = 200f;
             
         
+        }
+
+        public Game1 Game
+        {
+            get { return this._game; }
+            set { this._game = value; }
         }
         public void setPosition(Vector2 pos)
         {
@@ -34,15 +42,15 @@ namespace Pong
             spriteBatch.Draw(barTexture, Position-new Vector2(barTexture.Width/2,barTexture.Height/2), Color.White);
         }
         public void moveDown(float t, GraphicsDeviceManager graphics)
-        {
+        {           //TODO: FIX this.Game.getGraphics() from returning null
             Position.Y += Speed * t;
-            if(Position.Y > graphics.PreferredBackBufferHeight - barTexture.Height / 2)
+            if(Position.Y >graphics.PreferredBackBufferHeight - barTexture.Height / 2)
             {
                 Position.Y = graphics.PreferredBackBufferHeight - barTexture.Height / 2;
             }
             
         }
-        public void moveUp(float t, GraphicsDeviceManager graphics)
+        public void moveUp(float t)
         {
             Position.Y -= Speed * t;
             if(Position.Y < barTexture.Height/2)
